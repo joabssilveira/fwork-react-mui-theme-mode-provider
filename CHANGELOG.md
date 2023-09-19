@@ -1,3 +1,9 @@
+#### 0.1.11 (2023-09-19)
+
+##### New Features
+
+* **systemcolor:**  option in thememodeprovider to disable systemcolor (4d7369f1)
+
 #### 0.1.10 (2023-09-19)
 
 ##### New Features
