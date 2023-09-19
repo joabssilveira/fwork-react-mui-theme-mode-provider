@@ -19,9 +19,7 @@ export interface IThemeModeContext {
   themeMode?: IThemeModeData,
 }
 
-export const ThemeModeContext = React.createContext<IThemeModeContext>({
-
-});
+export const ThemeModeContext = React.createContext<IThemeModeContext>({});
 
 // ThemeBoxComponent
 
@@ -83,7 +81,8 @@ export interface ThemeModeProviderProps extends React.PropsWithChildren {
   themeOptionsLight?: ThemeOptions | undefined,
   themeOptionsDark?: ThemeOptions | undefined,
   onChangeMode?: (mode: IThemeModeData) => void | undefined,
-  boxProps?: BoxProps | undefined
+  boxProps?: BoxProps | undefined,
+  disableSystemColor?: boolean | undefined
 }
 
 export const ThemeModeProvider = (props: ThemeModeProviderProps) => {
@@ -104,19 +103,29 @@ export const ThemeModeProvider = (props: ThemeModeProviderProps) => {
     () => {
       const themeModeContext: IThemeModeContext = {
         toggleMode: () => {
+          console.log(`props.disableSystemColor: ${props.disableSystemColor}`)
+
           const modeDataTmp: IThemeModeData =
-            modeData.origin == 'system' ? {
-              origin: 'user',
-              mode: 'light',
-            } : (
+            props.disableSystemColor ?
               modeData.mode == 'light' ? {
                 origin: 'user',
                 mode: 'dark'
               } : {
-                origin: 'system',
-                mode: systemMode
-              }
-            )
+                origin: 'user',
+                mode: 'light'
+              } :
+              modeData.origin == 'system' ? {
+                origin: 'user',
+                mode: 'light',
+              } : (
+                modeData.mode == 'light' ? {
+                  origin: 'user',
+                  mode: 'dark'
+                } : {
+                  origin: 'system',
+                  mode: systemMode
+                }
+              )
 
           WebUtils.setCookie('@theme-mode-data', JSON.stringify(modeDataTmp), 1000)
           setModeData(modeDataTmp);

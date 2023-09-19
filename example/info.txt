@@ -1,0 +1,2 @@
+update parcel package
+override <script src="./index.tsx"></script> to <script type="module" src="./index.tsx"></script> in index.html
