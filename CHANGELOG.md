@@ -1,3 +1,9 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [0.1.12-0](https://github.com/joabssilveira/fwork-react-mui-theme-mode-provider/compare/v0.1.11...v0.1.12-0) (2024-09-24)
+
 #### 0.1.11 (2023-09-19)
 
 ##### New Features
@@ -19,4 +25,3 @@
 ##### Tests
 
 * **changelog:**  this is a change log test (0ebf7ea1)
-
