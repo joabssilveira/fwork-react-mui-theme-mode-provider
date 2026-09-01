@@ -1,6 +1,6 @@
-import Brightness4Icon from '@mui/icons-material/Brightness4'
-import Brightness7Icon from '@mui/icons-material/Brightness7'
-import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon'
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 import { Box, BoxProps, IconButton, IconButtonProps, ThemeOptions, ThemeProvider, Tooltip, createTheme, useMediaQuery } from '@mui/material';
 import React from 'react';
 import { WebUtils } from './webUtils';
@@ -17,6 +17,7 @@ export interface IThemeModeData {
 export interface IThemeModeContext {
   toggleMode?: () => void,
   themeMode?: IThemeModeData,
+  toggleButtomProps?: ThemeModeToggleComponentProps
 }
 
 export const ThemeModeContext = React.createContext<IThemeModeContext>({});
@@ -53,13 +54,18 @@ export interface ThemeModeToggleComponentProps extends IconButtonProps {
 
 export const ThemeModeToggleComponent = (props: ThemeModeToggleComponentProps) => {
   const { lightIcon, darkIcon, systemIcon, toolTip, region, ...rest } = props
+
   const themeModeContext = React.useContext(ThemeModeContext);
+  const lRegion = region ?? themeModeContext.toggleButtomProps?.region
+  const lSystemIcon = systemIcon ?? themeModeContext.toggleButtomProps?.systemIcon
+  const lLightIcon = lightIcon ?? themeModeContext.toggleButtomProps?.lightIcon
+  const lDarkIcon = darkIcon ?? themeModeContext.toggleButtomProps?.darkIcon
 
   return <>
     <Tooltip
       title={props.toolTip ?? (themeModeContext.themeMode?.origin === 'system' ?
-        (region?.systemTitle ?? 'System') : (themeModeContext.themeMode?.mode === 'light' ?
-          (region?.lightTitle ?? 'Light') : (region?.darkTitle ?? 'Dark')))}
+        (lRegion?.systemTitle ?? 'System') : (themeModeContext.themeMode?.mode === 'light' ?
+          (lRegion?.lightTitle ?? 'Light') : (lRegion?.darkTitle ?? 'Dark')))}
     >
       <IconButton
         {...rest}
@@ -73,8 +79,8 @@ export const ThemeModeToggleComponent = (props: ThemeModeToggleComponentProps) =
         color={props.color || "inherit"}
       >
         {themeModeContext.themeMode?.origin === 'system' ?
-          (systemIcon ?? <InsertEmoticonIcon />) : (themeModeContext.themeMode?.mode === 'light' ?
-            (lightIcon ?? <Brightness7Icon />) : (darkIcon ?? <Brightness4Icon />))}
+          (lSystemIcon ?? <InsertEmoticonIcon />) : (themeModeContext.themeMode?.mode === 'light' ?
+            (lLightIcon ?? <Brightness7Icon />) : (lDarkIcon ?? <Brightness4Icon />))}
       </IconButton>
     </Tooltip>
   </>
@@ -89,7 +95,8 @@ export interface ThemeModeProviderProps extends React.PropsWithChildren {
   themeOptionsDark?: ThemeOptions | undefined,
   onChangeMode?: (mode: IThemeModeData) => void | undefined,
   boxProps?: BoxProps | undefined,
-  disableSystemColor?: boolean | undefined
+  disableSystemColor?: boolean | undefined,
+  toggleButtomProps?: ThemeModeToggleComponentProps
 }
 
 export const ThemeModeProvider = (props: ThemeModeProviderProps) => {
@@ -139,7 +146,8 @@ export const ThemeModeProvider = (props: ThemeModeProviderProps) => {
           if (props.onChangeMode)
             props.onChangeMode(modeDataTmp)
         },
-        themeMode: modeData
+        themeMode: modeData,
+        toggleButtomProps: props.toggleButtomProps,
       }
       return themeModeContext
     },
